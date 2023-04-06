@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import { DataObject } from './Home';
 
 interface DataProps{
   rows: DataObject[];
   fetchData: () => void;
-  searchIdValue: string
+  searchIdValue: string;
+  selectedRows: string[]
+  setSelectedRows: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const columns: GridColDef[] = [
@@ -18,6 +20,11 @@ const columns: GridColDef[] = [
 ];
 
 export default function DataTable(props: DataProps) {
+
+  const handleRowSelection = (selection: GridRowId[]): void => {
+		props.setSelectedRows(selection.map((id) => String(id)))
+	}
+
   React.useEffect(() => {
     props.fetchData()
   }, [props.searchIdValue]);
@@ -28,6 +35,8 @@ export default function DataTable(props: DataProps) {
         rows={props.rows}
         columns={columns}
         checkboxSelection
+        onRowSelectionModelChange={handleRowSelection}
+        rowSelectionModel={props.selectedRows}
       />
     </Box>
   );

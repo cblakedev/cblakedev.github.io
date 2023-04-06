@@ -46,6 +46,7 @@ export default function OrderHome() {
 	const [customerName, setCustomerName] = React.useState<string>("");
 	const [creatorName, setCreatorName] = React.useState<string>("");
 	const [orderCreationDate, setOrderCreationDate] = React.useState<string>("");
+	const [selectedRows, setSelectedRows] = React.useState<string[]>([])
 
 	const openCreateOrderModal = () => {
 		setOrderId(uuidv4());
@@ -118,6 +119,13 @@ export default function OrderHome() {
 		fetchData()
 	};
 
+
+	const handleRowDeletion = () => {
+		const selectedOrderIds = selectedRows.map((value: string, rowIndex: number) => rows[rowIndex].orderId);
+
+		console.log(selectedOrderIds)
+	}
+
 	const handleOrderTypeChange = (e: React.ChangeEvent<{}>, orderType: string | null): void => {
 		setOrderTypeValue(orderType);
 
@@ -169,7 +177,7 @@ export default function OrderHome() {
 							</Button>
 						</Grid>
 						<Grid>
-							<Button variant="contained" sx={{ marginRight: 4, height: "100%", boxShadow: 0 }}>
+							<Button variant="contained" sx={{ marginRight: 4, height: "100%", boxShadow: 0 }} onClick={handleRowDeletion}>
 								<DeleteIcon /> Delete Selected
 							</Button>
 						</Grid>
@@ -188,7 +196,7 @@ export default function OrderHome() {
 				</Toolbar>
 			</Box>
 
-			<DataTable rows={rows} fetchData={fetchData} searchIdValue={searchIdValue}/>
+			<DataTable rows={rows} fetchData={fetchData} searchIdValue={searchIdValue} setSelectedRows={setSelectedRows} selectedRows={selectedRows}/>
 
 			<Modal open={open} onClose={handleOrderClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
 				<Box sx={modalStyle}>
