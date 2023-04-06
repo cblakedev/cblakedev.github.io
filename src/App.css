@@ -1,38 +1,28 @@
-.App {
-  text-align: center;
+
+/* Nav Styles */
+.redLogo {
+    width: 30px;
+    margin-bottom: -5px;
+    padding-right: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.homeLink span {
+    font-weight: 600;
+    font-size: 18px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.homeLink:hover {
+    opacity: .5;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.customerSearchWrapper fieldset{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
-.App-link {
-  color: #61dafb;
+.customerSearchWrapper Button {
+    height: 100%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
