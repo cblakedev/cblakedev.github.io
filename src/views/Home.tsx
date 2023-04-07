@@ -123,7 +123,6 @@ export default function OrderHome() {
 		const orderIdList = selectedRows.map((rowIndex: number) => rows[rowIndex - 1].orderId);
 
 		if (orderIdList.length >= 1) {
-			console.log(orderIdList);
 			const fetchOrderDelete = async () => {
 				const response = await fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
 					method: "POST",
@@ -220,7 +219,7 @@ export default function OrderHome() {
 
 			<Modal open={open} onClose={handleOrderClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
 				<Box sx={modalStyle}>
-					<Typography id="modal-modal-title" variant="h6" component="h2">
+					<Typography id="modal-modal-title" variant="h6" component="h2" sx={{marginBottom: 1}}>
 						Create Order
 					</Typography>
 					<form onSubmit={handleOrderSubmit}>
