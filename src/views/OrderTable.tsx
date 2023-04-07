@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import { DataObject } from './Home';
 
@@ -7,8 +7,9 @@ interface DataProps{
   rows: DataObject[];
   fetchData: () => void;
   searchIdValue: string;
-  selectedRows: string[]
-  setSelectedRows: React.Dispatch<React.SetStateAction<string[]>>
+  selectedRows: number[]
+  setSelectedRows: React.Dispatch<React.SetStateAction<number[]>>
+  counter: number
 }
 
 const columns: GridColDef[] = [
@@ -21,13 +22,13 @@ const columns: GridColDef[] = [
 
 export default function DataTable(props: DataProps) {
 
-  const handleRowSelection = (selection: GridRowId[]): void => {
-		props.setSelectedRows(selection.map((id) => String(id)))
-	}
+  const handleSelectionChange = (rowSelectionModel: any): void => {
+    props.setSelectedRows(rowSelectionModel);
+  };
 
   React.useEffect(() => {
     props.fetchData()
-  }, [props.searchIdValue]);
+  }, [props.searchIdValue, props.counter]);
 
   return (
     <Box sx={{ height: '100vh', width: '100%', paddingTop: 3 }}>
@@ -35,8 +36,7 @@ export default function DataTable(props: DataProps) {
         rows={props.rows}
         columns={columns}
         checkboxSelection
-        onRowSelectionModelChange={handleRowSelection}
-        rowSelectionModel={props.selectedRows}
+        onRowSelectionModelChange={handleSelectionChange}
       />
     </Box>
   );

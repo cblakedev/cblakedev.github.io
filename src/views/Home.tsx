@@ -46,9 +46,10 @@ export default function OrderHome() {
 	const [customerName, setCustomerName] = React.useState<string>("");
 	const [creatorName, setCreatorName] = React.useState<string>("");
 	const [orderCreationDate, setOrderCreationDate] = React.useState<string>("");
-	const [selectedRows, setSelectedRows] = React.useState<string[]>([])
+	const [selectedRows, setSelectedRows] = React.useState<number[]>([]);
+	const [counter, setCounter] = React.useState<number>(0);
 
-	const openCreateOrderModal = () => {
+	const openCreateOrderModal = (): void => {
 		setOrderId(uuidv4());
 		setOpen(true);
 	};
@@ -75,22 +76,22 @@ export default function OrderHome() {
 		const rowsWithId = data.map((row: DataObject, index: number) => ({ ...row, id: index + 1 }));
 
 		setRows(rowsWithId);
-		console.log(rowsWithId);
 	};
 
-	const handleIdSearch = () => {
+	const handleIdSearch = (): void => {
 		if (searchIdValue !== "") {
 			const filtered = rows.filter((row) => row.orderId.includes(searchIdValue));
-			if (filtered) {
-				setRows(filtered)
+			
+			if (filtered.length >= 1) {
+				setRows(filtered);
 			} else {
-				setRows([])
+				setRows([]);
 			}
 		}
-	}
+	};
 
-	const handleKeyPress = (event: React.KeyboardEvent) => {
-		if (event.key === 'Enter') {
+	const handleKeyPress = (event: React.KeyboardEvent): void => {
+		if (event.key === "Enter") {
 			handleIdSearch();
 		}
 	};
@@ -114,17 +115,30 @@ export default function OrderHome() {
 		});
 
 		const data = await response.json();
-		console.log(data);
 		handleOrderClose();
-		fetchData()
+		fetchData();
 	};
 
+	const handleRowDeletion = (): void => {
+		const orderIdList = selectedRows.map((rowIndex: number) => rows[rowIndex - 1].orderId);
 
-	const handleRowDeletion = () => {
-		const selectedOrderIds = selectedRows.map((value: string, rowIndex: number) => rows[rowIndex].orderId);
+		if (orderIdList.length >= 1) {
+			console.log(orderIdList);
+			const fetchOrderDelete = async () => {
+				const response = await fetch("http://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						ApiKey: "b7b77702-b4ec-4960-b3f7-7d40e44cf5f4",
+					},
+					body: JSON.stringify(orderIdList),
+				});
+			};
 
-		console.log(selectedOrderIds)
-	}
+			fetchOrderDelete();
+			setCounter(counter + 1);
+		}
+	};
 
 	const handleOrderTypeChange = (e: React.ChangeEvent<{}>, orderType: string | null): void => {
 		setOrderTypeValue(orderType);
@@ -143,7 +157,6 @@ export default function OrderHome() {
 				const rowsWithId = data.map((row: DataObject, index: number) => ({ ...row, id: index + 1 }));
 
 				setRows(rowsWithId);
-				console.log(rowsWithId);
 			};
 
 			fetchOrderTypeData();
@@ -157,7 +170,7 @@ export default function OrderHome() {
 			<Box>
 				<Toolbar>
 					<Grid container sx={{ marginTop: "20px" }}>
-						<Grid className="customerSearchWrapper" sx={{ marginRight: 4 }}>
+						<Grid className="customerSearchWrapper" sx={{ marginRight: 4, display:{xs: "none", sm:"block"} }}>
 							<TextField
 								className="customerSearch"
 								label="Customer Search"
@@ -173,12 +186,12 @@ export default function OrderHome() {
 						</Grid>
 						<Grid>
 							<Button variant="contained" sx={{ marginRight: 4, height: "100%", boxShadow: 0 }} onClick={openCreateOrderModal}>
-								<AddIcon /> Create Order
+								<AddIcon /> <Box sx={{display:{xs: "none", lg:"block"}}}>Create Order</Box>
 							</Button>
 						</Grid>
 						<Grid>
 							<Button variant="contained" sx={{ marginRight: 4, height: "100%", boxShadow: 0 }} onClick={handleRowDeletion}>
-								<DeleteIcon /> Delete Selected
+								<DeleteIcon /> <Box sx={{display:{xs: "none", lg:"block"}}}>Delete Selected</Box>
 							</Button>
 						</Grid>
 						<Grid>
@@ -187,7 +200,7 @@ export default function OrderHome() {
 								options={orderTypeOptions.map((option) => option.label)}
 								value={orderTypeValue}
 								onChange={(e, value) => handleOrderTypeChange(e, value)}
-								sx={{ width: 200 }}
+								sx={{ width: 200, display:{xs: "none", md:"block"} }}
 								renderInput={(params) => <TextField {...params} label="Order Type" />}
 								size="small"
 							/>
@@ -196,7 +209,14 @@ export default function OrderHome() {
 				</Toolbar>
 			</Box>
 
-			<DataTable rows={rows} fetchData={fetchData} searchIdValue={searchIdValue} setSelectedRows={setSelectedRows} selectedRows={selectedRows}/>
+			<DataTable
+				rows={rows}
+				fetchData={fetchData}
+				searchIdValue={searchIdValue}
+				setSelectedRows={setSelectedRows}
+				selectedRows={selectedRows}
+				counter={counter}
+			/>
 
 			<Modal open={open} onClose={handleOrderClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
 				<Box sx={modalStyle}>
