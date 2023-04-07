@@ -64,7 +64,7 @@ export default function OrderHome() {
 	};
 
 	const fetchData = async (): Promise<void> => {
-		const response = await fetch("http://red-candidate-web.azurewebsites.net/api/Orders", {
+		const response = await fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -99,7 +99,7 @@ export default function OrderHome() {
 	const handleOrderSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 		e.preventDefault();
 
-		const response = await fetch("http://red-candidate-web.azurewebsites.net/api/Orders", {
+		const response = await fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -125,7 +125,7 @@ export default function OrderHome() {
 		if (orderIdList.length >= 1) {
 			console.log(orderIdList);
 			const fetchOrderDelete = async () => {
-				const response = await fetch("http://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
+				const response = await fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -145,7 +145,7 @@ export default function OrderHome() {
 
 		if (orderType) {
 			const fetchOrderTypeData = async () => {
-				const response = await fetch(`http://red-candidate-web.azurewebsites.net/api/Orders/ByType?orderType=${orderType}`, {
+				const response = await fetch(`https://red-candidate-web.azurewebsites.net/api/Orders/ByType?orderType=${orderType}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
